@@ -3,6 +3,7 @@ Ce script python lit les données d'une sonde Grove DHT22 et envoie le résultat
 
 ## Matériel utilisé
 La sonde "Grove Temperature and Humidity Sensor Pro DHT22" est connectée à un module "GrovePi+".
+
 Le module "GrovePi+" est connecté à un "Raspberry Pi 2 Model B"
 
 ## Licence
