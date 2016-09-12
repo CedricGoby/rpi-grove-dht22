@@ -64,9 +64,11 @@ except MySQLdb.Error, e:
     # Envoi d'un email indiquant l'erreur MySQL
     # Création du message
     msg = MIMEText(_erreurmysql)
-    # Nom, adresse email
+    # Destinataire
     msg['To'] = email.utils.formataddr(('Recipient', _recipient))
+    # Expéditeur
     msg['From'] = email.utils.formataddr((_hostname, _recipient))
+    # Sujet
     msg['Subject'] = '[Erreur MySQL]'
     # Connexion au serveur SMTP avec un timeout en secondes
     server = smtplib.SMTP(_smtp_server,timeout=60)
