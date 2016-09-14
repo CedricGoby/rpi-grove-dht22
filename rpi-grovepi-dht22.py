@@ -7,6 +7,7 @@
 # Description : Récupère la température et l'humidité depuis la sonde et envoie les données
 # vers une base MySQL. Un email est envoyé en cas d'erreur de connexion à la base.
 # Usage : python rpi-grovepi-dht22.py
+# Auteur : Cédric Goby
 # Licence : GNU General Public License, version 3 (GPL-3.0)
 
 # Importation des modules nécessaires
