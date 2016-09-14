@@ -55,15 +55,15 @@ try:
 except MySQLdb.Error, e:
     try:
         # On récupère l'erreur MySQL (l'erreur est connue)
-        _erreurmysql = ("MySQL Error [%d]: %s" % (e.args[0], e.args[1]))
-        print _erreurmysql
+        _mysqlerror = ("MySQL Error [%d]: %s" % (e.args[0], e.args[1]))
+        print _mysqlerror
     except IndexError:
         # On récupère l'erreur MySQL (l'erreur est inconnue)
-        _erreurmysql =  ("MySQL Error: %s" % str(e))
-        print _erreurmysql
+        _mysqlerror =  ("MySQL Error: %s" % str(e))
+        print _mysqlerror
     # Envoi d'un email indiquant l'erreur MySQL
     # Création du message
-    msg = MIMEText(_erreurmysql)
+    msg = MIMEText(_mysqlerror)
     # Destinataire
     msg['To'] = email.utils.formataddr(('Recipient', _recipient))
     # Expéditeur
