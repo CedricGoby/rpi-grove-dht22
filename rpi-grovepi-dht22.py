@@ -11,6 +11,7 @@
 # Licence : GNU General Public License, version 3 (GPL-3.0)
 
 # Importation des modules nécessaires
+import os
 import grovepi
 import MySQLdb
 import time
@@ -30,6 +31,8 @@ _hostname ="hostname"
 _recipient ="your-address@your-provider.com"
 # Serveur SMTP pour l'envoi des emails
 _smtp_server ="smtp.your-provider.com"
+# Nom du scipt
+_file_name = os.path.basename(__file__)
 # Date et heure
 _datetime = time.strftime('%Y-%m-%d %H:%M:%S',time.localtime()) 
 
@@ -69,8 +72,8 @@ except MySQLdb.Error, e:
     msg['To'] = email.utils.formataddr(('Recipient', _recipient))
     # Expéditeur
     msg['From'] = email.utils.formataddr((_hostname, _recipient))
-    # Sujet
-    msg['Subject'] = '[Erreur MySQL]'
+    # Sujet incluant le nom du script et le nom d'hôte
+    msg['Subject'] = '[Erreur MySQL] - '+ _file_name +' - '+ _hostname
     # Connexion au serveur SMTP avec un timeout en secondes
     server = smtplib.SMTP(_smtp_server,timeout=60)
     # Affichage des messages de communication avec le serveur SMTP (Pour débogage)
