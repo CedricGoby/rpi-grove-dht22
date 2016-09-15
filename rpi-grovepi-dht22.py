@@ -41,7 +41,7 @@ _datetime = time.strftime('%Y-%m-%d %H:%M:%S',time.localtime())
 sensor = 4
 # Lancement du processus d'acquisition
 try:
-	# Acquisition des données de la sonde
+    # Acquisition des données de la sonde
     # Second paramètre:  1 = Sonde de température et d'humitité DHT22
 	[_temperature,_humidity] = grovepi.dht(sensor,1)
 	print _datetime,_temperature,_humidity
