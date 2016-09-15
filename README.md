@@ -1,4 +1,6 @@
 # rpi-grove-dht22.py
+
+## Description
 Ce script python lit les données d'une sonde Grove DHT22 et envoie le résultat vers une base de données MySQL distante. En cas d'erreur, un email est envoyé avec la nature de l'erreur rencontrée.
 
 ## Matériel utilisé
