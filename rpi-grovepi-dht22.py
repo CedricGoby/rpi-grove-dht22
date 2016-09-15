@@ -7,7 +7,6 @@
 # Description : Récupère la température et l'humidité depuis la sonde et envoie les données
 # vers une base MySQL. Un email est envoyé en cas d'erreur de connexion à la base.
 # Usage : python rpi-grovepi-dht22.py
-# Auteur : Cédric Goby
 # Licence : GNU General Public License, version 3 (GPL-3.0)
 
 # Importation des modules nécessaires
@@ -24,13 +23,15 @@ _db_name ="db-name"
 # Nom de la table
 _db_table ="db-table"
 # Fichier de connexion (contient : utilisateur MySQL, mot de passe, hôte MySQL)
-_db_config_file ="db-login.cnf"
+_db_login_file ="db-login.cnf"
 # Nom de l'hôte qui envoie les emails
 _hostname ="hostname"
+# Expéditeur des emails
+_sender ="sender@provider.com"
 # Destinataire des emails
-_recipient ="your-address@your-provider.com"
+_recipient ="recipient@provider.com"
 # Serveur SMTP pour l'envoi des emails
-_smtp_server ="smtp.your-provider.com"
+_smtp_server ="smtp.provider.com"
 # Nom du scipt
 _file_name = os.path.basename(__file__)
 # Date et heure
@@ -45,7 +46,7 @@ try:
 	[_temperature,_humidity] = grovepi.dht(sensor,1)
 	print _datetime,_temperature,_humidity
 	# Connexion à la base MySQL : Timeout en secondes, Nom de la base de données MySQL, fichier de connexion
-	con = MySQLdb.connect(connect_timeout=10,db=_db_name,read_default_file=_db_config_file)
+	con = MySQLdb.connect(connect_timeout=10,db=_db_name,read_default_file=_db_login_file)
 	# Création d'un "Cursor object" qui permettra d'exécuter n'importe quelle requête SQL
 	cur = con.cursor()
 	# Construction de la requête SQL
@@ -69,9 +70,9 @@ except MySQLdb.Error, e:
     # Création du message
     msg = MIMEText(_mysql_error)
     # Destinataire
-    msg['To'] = email.utils.formataddr(('Recipient', _recipient))
+    msg['To'] = email.utils.formataddr((_recipient, _recipient))
     # Expéditeur
-    msg['From'] = email.utils.formataddr((_hostname, _recipient))
+    msg['From'] = email.utils.formataddr((_sender, _sender))
     # Sujet incluant le nom du script et le nom d'hôte
     msg['Subject'] = '[Erreur MySQL] - '+ _file_name +' - '+ _hostname
     # Connexion au serveur SMTP avec un timeout en secondes
