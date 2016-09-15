@@ -3,84 +3,80 @@
 # filename: rpi-grovepi-dht22.py
 # Raspbian GNU/Linux 8 (Jessie)
 # Python 2.7
-# Matériel utilisé : Raspberry pi2 Model B, Module GrovePi+, Grove Temperature and Humidity Sensor Pro DHT22
+# Matériel utilisé : Raspberry pi2 Model B, Module GrovePi+, Grove Temperature and Humidity __sensor Pro DHT22
 # Description : Récupère la température et l'humidité depuis la sonde et envoie les données
 # vers une base MySQL. Un email est envoyé en cas d'erreur de connexion à la base.
 # Usage : python rpi-grovepi-dht22.py
 # Licence : GNU General Public License, version 3 (GPL-3.0)
 
 # Importation des modules nécessaires
+import sys
 import os
 import grovepi
 import MySQLdb
 import time
-import smtplib
-import email.utils
-from email.mime.text import MIMEText
+# Importation de la fonction SendError depuis le fichier send__error.py
+from send_error import SendError
 
 # Nom de la base MySQL
-_db_name ="db-name"
+__db_name ="db-name"
 # Nom de la table
-_db_table ="db-table"
+__db_table ="db-table"
 # Fichier de connexion (contient : utilisateur MySQL, mot de passe, hôte MySQL)
-_db_login_file ="db-login.cnf"
+__db_login_file ="db-login.cnf"
 # Nom de l'hôte qui envoie les emails
-_hostname ="hostname"
+__hostname ="hostname"
 # Expéditeur des emails
-_sender ="sender@provider.com"
+__sender ="sender@provider.com"
 # Destinataire des emails
-_recipient ="recipient@provider.com"
+__recipient ="recipient@provider.com"
 # Serveur SMTP pour l'envoi des emails
-_smtp_server ="smtp.provider.com"
+__smtp_server ="smtp.provider.com"
 # Nom du scipt
-_file_name = os.path.basename(__file__)
+__file_name = os.path.basename(__file__)
 # Date et heure
-_datetime = time.strftime('%Y-%m-%d %H:%M:%S',time.localtime()) 
+__datetime = time.strftime('%Y-%m-%d %H:%M:%S',time.localtime()) 
+# La sonde Grove Temperature & Humidity sensor Pro est connectée au port digital D4 du module GrovePi+ # SIG,NC,VCC,GND
+__sensor = 4
 
-# Connecte la sonde Grove Temperature & Humidity Sensor Pro au port digital D4 # SIG,NC,VCC,GND
-sensor = 4
-# Lancement du processus d'acquisition
+# Lancement du processus d'acquisition des données de la sonde
 try:
-	# Acquisition des données de la sonde
-	# Second paramètre:  1 = Sonde de température et d'humitité DHT22
-	[_temperature,_humidity] = grovepi.dht(sensor,1)
-	print _datetime,_temperature,_humidity
+	# Acquisition de la température et de l'humidité
+	# Second paramètre: 1 = Modèle de sonde de température et d'humitité DHT22
+	[__temperature,__humidity] = grovepi.dht(__sensor,1)
+	# Affichage de la date et de l'heure, de la température et de l'humidité
+	print __datetime,__temperature,__humidity
 	# Connexion à la base MySQL : Timeout en secondes, Nom de la base de données MySQL, fichier de connexion
-	con = MySQLdb.connect(connect_timeout=10,db=_db_name,read_default_file=_db_login_file)
-	# Création d'un "Cursor object" qui permettra d'exécuter n'importe quelle requête SQL
+	con = MySQLdb.connect(connect_timeout=10,db=__db_name,read_default_file=__db_login_file)
+	# Création d'un "Cursor object" qui permettra d'exécuter la requête SQL
 	cur = con.cursor()
 	# Construction de la requête SQL
-	sql = "INSERT INTO " + _db_table + " (date_insert, temperature, humidity) VALUES (%s, %s, %s)"
+	sql = "INSERT INTO " + __db_table + " (date_insert, temperature, humidity) VALUES (%s, %s, %s)"
 	# Exécution de la requête SQL
-	cur.execute(sql, (_datetime, _temperature, _humidity))
+	cur.execute(sql, (__datetime, __temperature, __humidity))
 	con.commit()
 	# Fermeture de la connexion à la base MySQL
 	con.close()
-# En cas d'erreur MySQL
+
+# Dans le cas d'une erreur MySQL
 except MySQLdb.Error, e:
-    try:
-        # On récupère l'erreur MySQL (l'erreur est connue)
-        _mysql_error = ("MySQL Error [%d]: %s" % (e.args[0], e.args[1]))
-        print _mysql_error
-    except IndexError:
-        # On récupère l'erreur MySQL (l'erreur est inconnue)
-        _mysql_error =  ("MySQL Error: %s" % str(e))
-        print _mysql_error
-    # Envoi d'un email indiquant l'erreur MySQL
-    # Création du message
-    msg = MIMEText(_mysql_error)
-    # Destinataire
-    msg['To'] = email.utils.formataddr((_recipient, _recipient))
-    # Expéditeur
-    msg['From'] = email.utils.formataddr((_sender, _sender))
-    # Sujet incluant le nom du script et le nom d'hôte
-    msg['Subject'] = '[Erreur MySQL] - '+ _file_name +' - '+ _hostname
-    # Connexion au serveur SMTP avec un timeout en secondes
-    server = smtplib.SMTP(_smtp_server,timeout=60)
-    # Affichage des messages de communication avec le serveur SMTP (Pour débogage)
-    server.set_debuglevel(True)
-    # Envoi du message (expéditeur, destinataire)
-    try:
-        server.sendmail(_recipient, [_recipient], msg.as_string())
-    finally:
-        server.quit()
+	try:
+		# Récupération de l'erreur MySQL (l'erreur est connue)
+		__error = ("Erreur MySQL [%d]: %s" % (e.args[0], e.args[1]))
+		# Affichage de l'erreur
+		print __error
+	except IndexError:
+		# Récupération de l'erreur MySQL (l'erreur est inconnue)
+		__error =  ("Erreur MySQL: %s" % str(e))
+		# Affichage de l'erreur
+		print __error
+	# Envoi de l'erreur par email avec la fonction SendError
+	SendError(__error, __sender, __recipient, __hostname, __file_name, __smtp_server)
+
+# Dans le cas d'une erreur autre qu'une erreur MySQL
+except:
+	__error = ("Erreur: %s" % sys.exc_info()[0])
+	# Affichage de l'erreur
+	print __error
+	# Envoi de l'erreur par email avec la fonction SendError
+	SendError(__error, __sender, __recipient, __hostname, __file_name, __smtp_server)
