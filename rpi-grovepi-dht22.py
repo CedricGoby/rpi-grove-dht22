@@ -8,7 +8,7 @@
 # vers une base MySQL. Un email est envoyé en cas d'erreur.
 # Usage : python rpi-grovepi-dht22.py
 # Auteur : Cédric Goby
-# Licence : GNU General Public License, version 3 (GPL-3.0)
+# Licence : GNU General Public License, version 3 (GPL-3.0)<<<<<<<<
 
 # Importation des modules nécessaires
 import sys
