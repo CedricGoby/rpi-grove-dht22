@@ -1,14 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# filename: rpi-grovepi-dht22.py
-# Raspbian GNU/Linux 8 (Jessie)
-# Python 2.7
-# Matériel utilisé : Raspberry pi2 Model B, Module GrovePi+, Grove Temperature and Humidity sensor Pro DHT22
+
 # Description : Récupère la température et l'humidité depuis la sonde et envoie les données
 # vers une base MySQL. Un email est envoyé en cas d'erreur.
-# Usage : python rpi-grovepi-dht22.py
+# Copyright (C) 2016 Institut National de la Recherche Agronomique (INRA)
+# Licence : GPL-3+
 # Auteur : Cédric Goby
-# Licence : GNU General Public License, version 3 (GPL-3.0)<<<<<<<<
+# Versioning : https://github.com/CedricGoby/rpi-grove-dht22
 
 # Importation des modules nécessaires
 import sys
