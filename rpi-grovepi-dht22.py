@@ -3,7 +3,6 @@
 
 # Description : Récupère la température et l'humidité depuis la sonde et envoie les données
 # vers une base MySQL. Un email est envoyé en cas d'erreur.
-# Copyright (C) 2016 Institut National de la Recherche Agronomique (INRA)
 # Licence : GPL-3+
 # Auteur : Cédric Goby
 # Versioning : https://github.com/CedricGoby/rpi-grove-dht22
