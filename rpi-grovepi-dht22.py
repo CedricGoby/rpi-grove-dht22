@@ -21,7 +21,7 @@ __db_name ="db-name"
 # Nom de la table
 __db_table ="db-table"
 # Fichier de connexion (contient : utilisateur MySQL, mot de passe, hôte MySQL)
-__db_login_file ="db-login.cnf"
+__db_login_file = os.path.join(sys.path[0], 'db-login.cnf')
 # Nom de l'hôte qui envoie les emails
 __hostname ="hostname"
 # Expéditeur des emails
