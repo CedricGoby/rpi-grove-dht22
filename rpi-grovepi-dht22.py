@@ -6,7 +6,7 @@
 # Langage : Python 2
 # Licence : GPL-3+
 # Auteur : Cédric Goby
-# Versioning : https://github.com/CedricGoby/rpi-grove-dht22
+# Versioning : https://gitlab.com/CedricGoby/rpi-grove-dht22
 
 # Importation des modules nécessaires
 import sys
